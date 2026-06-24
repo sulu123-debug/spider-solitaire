@@ -107,6 +107,14 @@
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚩%3C/text%3E%3C/svg%3E") center/contain no-repeat;
         }
 
+        .finddiff .game-icon {
+            background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
+        }
+
+        .finddiff .game-icon::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔍%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
         .coming-soon .game-icon {
             background: linear-gradient(135deg, #424242 0%, #616161 100%);
         }
@@ -257,6 +265,27 @@
                     </p>
                     <div class="game-tags">
                         <span class="tag">经典</span>
+                        <span class="tag">益智</span>
+                        <span class="tag difficulty-easy">简单</span>
+                        <span class="tag difficulty-medium">中等</span>
+                        <span class="tag difficulty-hard">困难</span>
+                    </div>
+                    <div class="play-button">开始游戏 →</div>
+                </div>
+            </a>
+
+            <!-- 找不同 -->
+            <a href="finddiff.html" class="game-card finddiff">
+                <div class="game-icon">
+                    🔍
+                </div>
+                <div class="game-info">
+                    <h2 class="game-title">找不同</h2>
+                    <p class="game-description">
+                        找出两张图片中的不同之处！玩法：点击左右两张图片中不一样的地方。难度越高，不同之处越多，限定时间越短！
+                    </p>
+                    <div class="game-tags">
+                        <span class="tag">观察</span>
                         <span class="tag">益智</span>
                         <span class="tag difficulty-easy">简单</span>
                         <span class="tag difficulty-medium">中等</span>
