@@ -17,39 +17,42 @@ body {
   flex-direction: column;
 }
 
-/* ====== 返回首页按钮 ====== */
+/* ====== 顶部工具栏 ====== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.9);
+  border-radius: 0 0 15px 15px;
+  padding: 8px 20px;
+  flex-shrink: 0;
+  margin: 0 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* 返回首页按钮 */
 .back-link {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  color: white;
+  color: #667eea;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   gap: 5px;
-  z-index: 100;
   padding: 8px 16px;
-  background: rgba(255,255,255,0.2);
   border-radius: 20px;
   transition: all 0.2s;
 }
 .back-link:hover {
-  background: rgba(255,255,255,0.3);
-  opacity: 0.9;
+  background: #667eea;
+  color: white;
 }
 
-/* ====== Menu Bar ====== */
+/* ====== Menu Bar (在顶部工具栏内) ====== */
 .menu-bar {
-  background: rgba(255,255,255,0.9);
-  border-radius: 0 0 15px 15px;
-  padding: 8px 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0;
-  margin: 0 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .menu-item {
@@ -769,26 +772,29 @@ body {
 </head>
 <body>
 
-<!-- 返回首页 -->
-<a href="index.html" class="back-link">← 返回游戏首页</a>
-
 <!-- 顶部工具栏 -->
-<div class="menu-bar">
-  <div class="menu-item" data-menu="game">
-    🎮 新游戏
-    <div class="dropdown" id="game-dropdown">
-      <div class="dropdown-item" onclick="showNewGameDialog()">新游戏(N)...</div>
-      <div class="dropdown-separator"></div>
-      <div class="dropdown-item" onclick="undoMove()">撤消(Z)&emsp;Ctrl+Z</div>
-      <div class="dropdown-separator"></div>
-      <div class="dropdown-item" onclick="showHint()">提示(H)&emsp;H</div>
-      <div class="dropdown-separator"></div>
-      <div class="dropdown-item" onclick="showLeaderboard()">🏆 排行榜</div>
-      <div class="dropdown-separator"></div>
-      <div class="dropdown-item" onclick="showSettings()">设置(S)...</div>
+<div class="top-bar">
+  <!-- 返回首页 -->
+  <a href="index.html" class="back-link">← 返回首页</a>
+
+  <!-- 菜单栏 -->
+  <div class="menu-bar">
+    <div class="menu-item" data-menu="game">
+      🎮 新游戏
+      <div class="dropdown" id="game-dropdown">
+        <div class="dropdown-item" onclick="showNewGameDialog()">新游戏(N)...</div>
+        <div class="dropdown-separator"></div>
+        <div class="dropdown-item" onclick="undoMove()">撤消(Z)&emsp;Ctrl+Z</div>
+        <div class="dropdown-separator"></div>
+        <div class="dropdown-item" onclick="showHint()">提示(H)&emsp;H</div>
+        <div class="dropdown-separator"></div>
+        <div class="dropdown-item" onclick="showLeaderboard()">🏆 排行榜</div>
+        <div class="dropdown-separator"></div>
+        <div class="dropdown-item" onclick="showSettings()">设置(S)...</div>
+      </div>
     </div>
+    <div class="menu-item" onclick="showSettings()" title="设置">⚙️ 设置</div>
   </div>
-  <div class="menu-item" onclick="showSettings()" title="设置">⚙️ 设置</div>
 </div>
 
 <!-- Game Area -->
