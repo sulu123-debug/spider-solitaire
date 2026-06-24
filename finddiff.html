@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>找不同</title>
+    <title>找不同 - 主题关卡版</title>
     <style>
         * {
             margin: 0;
@@ -40,24 +40,142 @@
 
         .back-link:hover {
             background: rgba(255,255,255,0.3);
-            opacity: 0.9;
+        }
+
+        /* 主题选择界面 */
+        .theme-select-screen {
+            width: 100%;
+            max-width: 900px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             color: white;
         }
 
         .header h1 {
-            font-size: 36px;
+            font-size: 42px;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .level-info {
+        .header p {
             font-size: 18px;
             opacity: 0.9;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .theme-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .theme-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .theme-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .theme-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .theme-desc {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .theme-card.film { border-top: 5px solid #e74c3c; }
+        .theme-card.fruit { border-top: 5px solid #27ae60; }
+        .theme-card.nature { border-top: 5px solid #3498db; }
+        .theme-card.animal { border-top: 5px solid #f39c12; }
+        .theme-card.food { border-top: 5px solid #9b59b6; }
+        .theme-card.sports { border-top: 5px solid #1abc9c; }
+
+        /* 关卡选择界面 */
+        .level-select-screen {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .level-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .level-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .level-btn {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .level-btn.completed {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .level-btn.current {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            animation: glow 1.5s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px #f39c12; }
+            50% { box-shadow: 0 0 25px #f39c12; }
+        }
+
+        /* 游戏界面 */
+        .game-screen {
+            width: 100%;
+            max-width: 850px;
         }
 
         .game-container {
@@ -65,7 +183,6 @@
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            max-width: 100%;
         }
 
         .game-header {
@@ -106,678 +223,1197 @@
             50% { transform: scale(1.1); }
         }
 
-        .game-area {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .image-container {
-            position: relative;
-            cursor: crosshair;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .image-container canvas {
-            display: block;
-        }
-
-        .image-label {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-        }
-
-        .difference-marker {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #4caf50;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            animation: markPop 0.3s ease-out;
-        }
-
-        @keyframes markPop {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.3); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        .found-marker {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: rgba(76, 175, 80, 0.3);
-            border: 2px solid #4caf50;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .level-selector {
+        .canvas-container {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        .level-btn {
-            padding: 10px 20px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 25px;
+        .canvas-wrapper {
+            position: relative;
             cursor: pointer;
-            transition: all 0.2s;
-            font-weight: bold;
+        }
+
+        .canvas-wrapper canvas {
+            border-radius: 10px;
+            border: 3px solid #e0e0e0;
+        }
+
+        .canvas-label {
+            text-align: center;
+            color: #666;
+            margin-top: 5px;
             font-size: 14px;
         }
 
-        .level-btn:hover, .level-btn.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .action-buttons {
+        .game-controls {
             display: flex;
-            gap: 10px;
             justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 24px;
-            font-size: 14px;
+            padding: 12px 30px;
             border: none;
             border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
-            font-weight: bold;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102,126,234,0.5);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
-        .btn-secondary {
-            background: #f5f5f5;
-            color: #333;
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .btn-secondary:hover {
-            background: #e0e0e0;
+        .btn-hint {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
         }
 
-        .hint-text {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            padding: 10px;
-            background: #f5f5f5;
-            border-radius: 10px;
+        .btn-hint:hover {
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
         }
 
-        .message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 40px 60px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            text-align: center;
-            z-index: 1000;
-            display: none;
+        .btn-back {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            box-shadow: 0 4px 15px rgba(149, 165, 166, 0.4);
         }
 
-        .message.show {
-            display: block;
-            animation: popIn 0.3s ease;
+        /* 标记样式 */
+        .marker {
+            position: absolute;
+            pointer-events: none;
+            animation: markerPop 0.3s ease-out;
         }
 
-        @keyframes popIn {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        @keyframes markerPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .message h2 {
-            font-size: 32px;
-            margin-bottom: 15px;
+        .hint-marker {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 4px dashed #FF9800;
+            border-radius: 50%;
+            animation: hintPulse 1s infinite;
+            pointer-events: none;
         }
 
-        .message.win h2 {
-            color: #4caf50;
+        @keyframes hintPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
         }
 
-        .message.lose h2 {
-            color: #f44336;
-        }
-
-        .message p {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .message .score {
-            font-size: 24px;
-            color: #667eea;
-            font-weight: bold;
-        }
-
+        /* 消息弹窗 */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+            background: rgba(0,0,0,0.7);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
         }
 
         .overlay.show {
-            display: block;
+            display: flex;
         }
 
-        @media (max-width: 768px) {
-            .game-area {
-                flex-direction: column;
-                align-items: center;
-            }
+        .message-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            animation: popIn 0.3s ease-out;
+        }
 
-            .header h1 {
-                font-size: 28px;
-            }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
-            .game-header {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
+        .message-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .message-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .message-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .message-score {
+            font-size: 48px;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-link">← 返回游戏首页</a>
+    <span class="back-link" id="backLink" style="cursor: pointer;">← 返回首页</span>
 
-    <div class="header">
-        <h1>🔍 找不同</h1>
-        <div class="level-info">当前难度: <span id="currentLevel">简单</span></div>
-    </div>
-
-    <div class="level-selector">
-        <button class="level-btn active" data-level="easy">简单 (3处)</button>
-        <button class="level-btn" data-level="medium">中等 (5处)</button>
-        <button class="level-btn" data-level="hard">困难 (7处)</button>
-    </div>
-
-    <div class="game-container">
-        <div class="game-header">
-            <div class="game-stat">
-                <span class="game-stat-label">⏱️ 剩余时间</span>
-                <span class="game-stat-value" id="timer">60</span>
-            </div>
-            <div class="game-stat">
-                <span class="game-stat-label">🎯 找到</span>
-                <span class="game-stat-value" id="found">0/3</span>
-            </div>
-            <div class="game-stat">
-                <span class="game-stat-label">⭐ 得分</span>
-                <span class="game-stat-value" id="score">0</span>
-            </div>
+    <!-- 主题选择界面 -->
+    <div id="themeSelectScreen" class="theme-select-screen">
+        <div class="header">
+            <h1>🎯 找不同</h1>
+            <p>选择你喜欢的主题开始游戏</p>
         </div>
-
-        <div class="game-area" id="gameArea">
-            <div class="image-container" id="leftContainer">
-                <div class="image-label">左图</div>
-                <canvas id="leftCanvas"></canvas>
+        <div class="theme-grid">
+            <div class="theme-card film" onclick="selectTheme('film')">
+                <div class="theme-icon">🎬</div>
+                <div class="theme-name">影视主题</div>
+                <div class="theme-desc">四大名著、历史剧、电影</div>
             </div>
-            <div class="image-container" id="rightContainer">
-                <div class="image-label">右图</div>
-                <canvas id="rightCanvas"></canvas>
+            <div class="theme-card fruit" onclick="selectTheme('fruit')">
+                <div class="theme-icon">🍎</div>
+                <div class="theme-name">水果主题</div>
+                <div class="theme-desc">各种美味水果</div>
             </div>
-        </div>
-
-        <div class="hint-text">
-            💡 提示：点击图片中不同的地方，两张图片共有 <span id="diffCount">3</span> 处不同
-        </div>
-
-        <div class="controls">
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onclick="startNewGame()">🔄 重新开始</button>
+            <div class="theme-card nature" onclick="selectTheme('nature')">
+                <div class="theme-icon">🏔️</div>
+                <div class="theme-name">山水主题</div>
+                <div class="theme-desc">山川河流、自然风光</div>
+            </div>
+            <div class="theme-card animal" onclick="selectTheme('animal')">
+                <div class="theme-icon">🐼</div>
+                <div class="theme-name">动物主题</div>
+                <div class="theme-desc">可爱的动物朋友们</div>
+            </div>
+            <div class="theme-card food" onclick="selectTheme('food')">
+                <div class="theme-icon">🍜</div>
+                <div class="theme-name">美食主题</div>
+                <div class="theme-desc">中西美食、特色小吃</div>
+            </div>
+            <div class="theme-card sports" onclick="selectTheme('sports')">
+                <div class="theme-icon">⚽</div>
+                <div class="theme-name">运动主题</div>
+                <div class="theme-desc">各种体育运动</div>
             </div>
         </div>
     </div>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="message" id="message">
-        <h2>🎉 恭喜!</h2>
-        <p>你找到了所有不同之处！</p>
-        <p class="score">得分: <span id="finalScore">0</span></p>
-        <button class="btn btn-primary" onclick="startNewGame()">下一关</button>
+    <!-- 关卡选择界面 -->
+    <div id="levelSelectScreen" class="level-select-screen hidden">
+        <div class="level-card">
+            <div class="level-title">
+                <span id="levelThemeIcon"></span>
+                <span id="levelThemeName"></span>
+            </div>
+            <div class="level-grid" id="levelGrid"></div>
+            <button class="btn btn-back" onclick="showThemeSelect()">← 返回主题选择</button>
+        </div>
+    </div>
+
+    <!-- 游戏界面 -->
+    <div id="gameScreen" class="game-screen hidden">
+        <div class="header">
+            <h1>找不同</h1>
+        </div>
+        <div class="game-container">
+            <div class="game-header">
+                <div class="game-stat">
+                    <span class="game-stat-label">关卡</span>
+                    <span class="game-stat-value" id="levelDisplay">1-1</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label">已找到</span>
+                    <span class="game-stat-value" id="found">0/3</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label">时间</span>
+                    <span class="game-stat-value" id="timer">60</span>
+                </div>
+                <div class="game-stat">
+                    <span class="game-stat-label">分数</span>
+                    <span class="game-stat-value" id="score">0</span>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <div class="canvas-wrapper" id="leftWrapper">
+                    <canvas id="leftCanvas" width="400" height="300"></canvas>
+                    <div class="canvas-label">左图</div>
+                </div>
+                <div class="canvas-wrapper" id="rightWrapper">
+                    <canvas id="rightCanvas" width="400" height="300"></canvas>
+                    <div class="canvas-label">右图</div>
+                </div>
+            </div>
+            <div class="game-controls">
+                <button class="btn" id="hintBtn" onclick="showHint()">💡 提示 (-50分)</button>
+                <button class="btn btn-back" onclick="showLevelSelect()">← 重选关卡</button>
+                <button class="btn" onclick="nextLevel()">下一关 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息弹窗 -->
+    <div class="overlay" id="overlay">
+        <div class="message-box" id="message">
+            <div class="message-icon">🎉</div>
+            <div class="message-title">恭喜过关！</div>
+            <div class="message-score" id="finalScore">0</div>
+            <button class="btn" onclick="nextLevel()">下一关</button>
+            <button class="btn btn-back" onclick="showLevelSelect()" style="margin-left: 10px;">返回选关</button>
+        </div>
+        <div class="message-box" id="loseMessage" style="display: none;">
+            <div class="message-icon">😢</div>
+            <div class="message-title">时间到！</div>
+            <div class="message-text">再来一次吧</div>
+            <button class="btn" onclick="retryLevel()">重新挑战</button>
+        </div>
     </div>
 
     <script>
-        // 游戏配置
-        const levelConfig = {
-            easy: { differences: 3, time: 60 },
-            medium: { differences: 5, time: 90 },
-            hard: { differences: 7, time: 120 }
-        };
-
         // 游戏状态
-        let currentLevel = 'easy';
-        let differences = [];
-        let foundDifferences = [];
+        let currentTheme = '';
+        let currentBigLevel = 1;
+        let currentSmallLevel = 1;
         let score = 0;
         let timeLeft = 60;
         let timer = null;
         let gameOver = false;
-        let gameWon = false;
+        let differences = [];
+        let foundDifferences = [];
+        let currentScreen = 'theme'; // theme, level, game
 
-        // 场景元素
-        const scenes = ['🌸', '🌺', '🌻', '🌹', '🌷', '🍀', '🍁', '🍎', '🍒', '🍓', '⭐', '🌙', '☀️', '🌈', '🎈', '🎀', '🎁', '🎉', '🎊', '🏠', '🏰', '🌲', '🌴', '🦋', '🐱', '🐶', '🐰', '🦊', '🐼', '🐨'];
+        // 主题配置 - 每个主题有多个场景
+        const themes = {
+            film: {
+                name: '影视主题',
+                icon: '🎬',
+                scenes: ['movie', 'camera', 'theater']
+            },
+            fruit: {
+                name: '水果主题',
+                icon: '🍎',
+                scenes: ['orchard', 'basket', 'market']
+            },
+            nature: {
+                name: '山水主题',
+                icon: '🏔️',
+                scenes: ['mountain', 'river', 'forest']
+            },
+            animal: {
+                name: '动物主题',
+                icon: '🐼',
+                scenes: ['zoo', 'forest', 'farm']
+            },
+            food: {
+                name: '美食主题',
+                icon: '🍜',
+                scenes: ['kitchen', 'restaurant', 'market']
+            },
+            sports: {
+                name: '运动主题',
+                icon: '⚽',
+                scenes: ['stadium', 'gym', 'pool']
+            }
+        };
 
-        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'];
+        // 主题对应的emoji
+        const themeEmojis = {
+            film: ['🎬', '🎥', '🎞️', '🍿', '🎫', '⭐', '🌟', '🎭', '🎨', '🖼️'],
+            fruit: ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈'],
+            nature: ['🏔️', '⛰️', '🌊', '🌅', '🌄', '🌲', '🌳', '🍃', '🌿', '🪨'],
+            animal: ['🐼', '🦁', '🐯', '🐻', '🐶', '🐱', '🐰', '🦊', '🐸', '🦆'],
+            food: ['🍕', '🍔', '🍟', '🍜', '🍝', '🍰', '🍦', '☕', '🍵', '🥗'],
+            sports: ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉', '🎱', '🏓', '🏸']
+        };
 
-        const shapes = ['circle', 'square', 'triangle', 'star', 'heart'];
+        // 场景绘制函数
+        const sceneDrawers = {
+            // 电影场景
+            movie: (ctx, emojis, diffIds, isRight) => {
+                // 电影院背景
+                const grad = ctx.createLinearGradient(0, 0, 0, 300);
+                grad.addColorStop(0, '#2c3e50');
+                grad.addColorStop(1, '#1a252f');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 400, 300);
 
-        // 初始化
-        function init() {
-            bindEvents();
-            startNewGame();
-        }
+                // 银幕
+                ctx.fillStyle = '#ecf0f1';
+                ctx.fillRect(50, 30, 300, 150);
+                ctx.fillStyle = '#3498db';
+                ctx.fillRect(60, 40, 280, 130);
 
-        // 绑定事件
-        function bindEvents() {
-            // 难度选择
-            document.querySelectorAll('.level-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentLevel = btn.dataset.level;
-                    document.getElementById('currentLevel').textContent = btn.textContent;
-                    startNewGame();
+                // 星星（装饰）
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`star_${i}`)) {
+                        drawEmojiAt(ctx, [40+i*40, 200], emoji, 0.6);
+                    }
                 });
-            });
 
-            // 图片点击
-            document.getElementById('leftContainer').addEventListener('click', (e) => handleImageClick(e, 'left'));
-            document.getElementById('rightContainer').addEventListener('click', (e) => handleImageClick(e, 'right'));
-        }
+                // 座位
+                for (let i = 0; i < 5; i++) {
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fillRect(60+i*60, 240, 40, 30);
+                    ctx.fillStyle = '#95a5a6';
+                    ctx.fillRect(65+i*60, 230, 30, 15);
+                }
+            },
+            // 相机场景
+            camera: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                const grad = ctx.createLinearGradient(0, 0, 400, 300);
+                grad.addColorStop(0, '#3498db');
+                grad.addColorStop(1, '#2980b9');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 400, 300);
 
-        // 开始新游戏
-        function startNewGame() {
-            const config = levelConfig[currentLevel];
+                // 相机
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillRect(100, 100, 200, 120);
+                ctx.fillStyle = '#34495e';
+                ctx.fillRect(120, 80, 160, 40);
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(280, 130, 25, 0, Math.PI*2);
+                ctx.fill();
 
-            // 重置状态
-            differences = [];
-            foundDifferences = [];
-            score = 0;
-            timeLeft = config.time;
-            gameOver = false;
-            gameWon = false;
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`deco_${i}`)) {
+                        drawEmojiAt(ctx, [30+i*35, 30], emoji, 0.5);
+                    }
+                });
+            },
+            // 剧院场景
+            theater: (ctx, emojis, diffIds, isRight) => {
+                // 剧院背景
+                const grad = ctx.createLinearGradient(0, 0, 0, 300);
+                grad.addColorStop(0, '#8e44ad');
+                grad.addColorStop(1, '#6c3483');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 400, 300);
 
-            // 停止旧计时器
-            if (timer) clearInterval(timer);
+                // 舞台
+                ctx.fillStyle = '#f39c12';
+                ctx.fillRect(50, 150, 300, 100);
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(80, 160, 240, 80);
 
-            // 生成关卡
-            generateLevel(config.differences);
+                // 幕布
+                ctx.fillStyle = '#c0392b';
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(80, 0);
+                ctx.lineTo(60, 80);
+                ctx.lineTo(20, 80);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(400, 0);
+                ctx.lineTo(320, 0);
+                ctx.lineTo(340, 80);
+                ctx.lineTo(380, 80);
+                ctx.closePath();
+                ctx.fill();
 
-            // 绘制图片
-            drawImages();
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`light_${i}`)) {
+                        drawEmojiAt(ctx, [50+i*80, 80], emoji, 0.6);
+                    }
+                });
+            },
+            // 果园场景
+            orchard: (ctx, emojis, diffIds, isRight) => {
+                // 天空
+                ctx.fillStyle = '#87CEEB';
+                ctx.fillRect(0, 0, 400, 150);
+                // 草地
+                ctx.fillStyle = '#27ae60';
+                ctx.fillRect(0, 150, 400, 150);
 
-            // 更新界面
-            document.getElementById('timer').textContent = timeLeft;
-            document.getElementById('timer').classList.remove('timer-warning');
-            document.getElementById('found').textContent = `0/${config.differences}`;
-            document.getElementById('score').textContent = score;
-            document.getElementById('diffCount').textContent = config.differences;
+                // 树
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(180, 100, 40, 100);
+                ctx.fillStyle = '#228B22';
+                ctx.beginPath();
+                ctx.arc(200, 90, 60, 0, Math.PI*2);
+                ctx.fill();
 
-            // 清理之前的标记
-            document.querySelectorAll('.difference-marker, .found-marker').forEach(el => el.remove());
+                // 苹果
+                const applePositions = [[170, 70], [200, 50], [230, 70], [185, 100], [215, 95]];
+                applePositions.forEach((pos, i) => {
+                    if (!diffIds.includes(`apple_${i}`)) {
+                        ctx.fillStyle = '#e74c3c';
+                        ctx.beginPath();
+                        ctx.arc(pos[0], pos[1], 10, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                });
 
-            // 开始计时器
-            timer = setInterval(updateTimer, 1000);
+                // 装饰
+                emojis.slice(0,3).forEach((emoji, i) => {
+                    drawEmojiAt(ctx, [50+i*120, 180], emoji, 0.8);
+                });
+            },
+            // 篮子场景
+            basket: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#f5deb3';
+                ctx.fillRect(0, 0, 400, 300);
 
-            hideMessage();
-        }
+                // 篮子
+                ctx.fillStyle = '#d2691e';
+                ctx.beginPath();
+                ctx.moveTo(100, 150);
+                ctx.lineTo(120, 250);
+                ctx.lineTo(280, 250);
+                ctx.lineTo(300, 150);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.stroke();
 
-        // 生成关卡
-        function generateLevel(count) {
-            differences = [];
-            const canvasWidth = 350;
-            const canvasHeight = 280;
-            const padding = 40;
+                // 水果
+                const fruits = [['🍎', 150, 140], ['🍊', 180, 130], ['🍋', 210, 135], ['🍇', 240, 145], ['🍓', 260, 140]];
+                fruits.forEach((f, i) => {
+                    if (!diffIds.includes(`fruit_${i}`)) {
+                        ctx.font = '30px Arial';
+                        ctx.fillText(f[0], f[1], f[2]);
+                    }
+                });
+            },
+            // 市场场景
+            market: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#ffeaa7';
+                ctx.fillRect(0, 0, 400, 300);
 
-            for (let i = 0; i < count; i++) {
-                let diff;
-                let valid = false;
-                let attempts = 0;
+                // 摊位
+                ctx.fillStyle = '#e17055';
+                ctx.fillRect(50, 100, 300, 150);
+                ctx.fillStyle = '#fab1a0';
+                ctx.fillRect(60, 110, 280, 130);
 
-                while (!valid && attempts < 100) {
-                    diff = {
-                        x: padding + Math.random() * (canvasWidth - padding * 2),
-                        y: padding + Math.random() * (canvasHeight - padding * 2),
-                        size: 20 + Math.random() * 25,
-                        type: Math.floor(Math.random() * 3), // 0: emoji, 1: shape, 2: color
-                        index: Math.floor(Math.random() * 3) // index to change
-                    };
+                // 遮阳伞
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(200, 80, 60, Math.PI, 0);
+                ctx.fill();
+                ctx.fillStyle = '#2d3436';
+                ctx.fillRect(195, 80, 10, 30);
 
-                    // 检查是否与已存在的差异重叠
-                    valid = !differences.some(d => {
-                        const dist = Math.sqrt((d.x - diff.x) ** 2 + (d.y - diff.y) ** 2);
-                        return dist < 50;
-                    });
-                    attempts++;
+                // 水果
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`mkt_${i}`)) {
+                        drawEmojiAt(ctx, [80+i*60, 160], emoji, 0.9);
+                    }
+                });
+            },
+            // 山景
+            mountain: (ctx, emojis, diffIds, isRight) => {
+                // 天空
+                const grad = ctx.createLinearGradient(0, 0, 0, 200);
+                grad.addColorStop(0, '#74b9ff');
+                grad.addColorStop(1, '#a29bfe');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 400, 200);
+
+                // 山
+                ctx.fillStyle = '#636e72';
+                ctx.beginPath();
+                ctx.moveTo(0, 200);
+                ctx.lineTo(100, 50);
+                ctx.lineTo(200, 150);
+                ctx.lineTo(300, 30);
+                ctx.lineTo(400, 200);
+                ctx.closePath();
+                ctx.fill();
+
+                // 雪顶
+                ctx.fillStyle = '#dfe6e9';
+                ctx.beginPath();
+                ctx.moveTo(80, 70);
+                ctx.lineTo(100, 50);
+                ctx.lineTo(120, 70);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(280, 50);
+                ctx.lineTo(300, 30);
+                ctx.lineTo(320, 50);
+                ctx.closePath();
+                ctx.fill();
+
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`mt_${i}`)) {
+                        drawEmojiAt(ctx, [30+i*50, 220], emoji, 0.7);
+                    }
+                });
+            },
+            // 河景
+            river: (ctx, emojis, diffIds, isRight) => {
+                // 天空
+                ctx.fillStyle = '#87ceeb';
+                ctx.fillRect(0, 0, 400, 120);
+                // 草地
+                ctx.fillStyle = '#27ae60';
+                ctx.fillRect(0, 200, 400, 100);
+
+                // 河
+                ctx.fillStyle = '#3498db';
+                ctx.beginPath();
+                ctx.moveTo(0, 120);
+                ctx.quadraticCurveTo(200, 180, 400, 140);
+                ctx.lineTo(400, 200);
+                ctx.lineTo(0, 200);
+                ctx.closePath();
+                ctx.fill();
+
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`rv_${i}`)) {
+                        drawEmojiAt(ctx, [40+i*80, 40], emoji, 0.6);
+                    }
+                });
+            },
+            // 森林
+            forest: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                const grad = ctx.createLinearGradient(0, 0, 0, 300);
+                grad.addColorStop(0, '#2d3436');
+                grad.addColorStop(1, '#00b894');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 400, 300);
+
+                // 树
+                for (let i = 0; i < 5; i++) {
+                    const x = 30 + i * 80;
+                    ctx.fillStyle = '#636e72';
+                    ctx.fillRect(x+20, 180, 20, 80);
+                    ctx.fillStyle = '#00b894';
+                    ctx.beginPath();
+                    ctx.moveTo(x, 180);
+                    ctx.lineTo(x+30, 80);
+                    ctx.lineTo(x+60, 180);
+                    ctx.closePath();
+                    ctx.fill();
                 }
 
-                differences.push(diff);
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`for_${i}`)) {
+                        drawEmojiAt(ctx, [50+i*70, 250], emoji, 0.8);
+                    }
+                });
+            },
+            // 动物园
+            zoo: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#fdcb6e';
+                ctx.fillRect(0, 0, 400, 300);
+
+                // 围栏
+                ctx.fillStyle = '#e17055';
+                ctx.fillRect(0, 150, 400, 20);
+                for (let i = 0; i < 10; i++) {
+                    ctx.fillRect(i*40, 150, 5, 30);
+                }
+
+                // 动物
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`zoo_${i}`)) {
+                        drawEmojiAt(ctx, [50+i*60, 200], emoji, 1.2);
+                    }
+                });
+            },
+            // 农场
+            farm: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#74b9ff';
+                ctx.fillRect(0, 0, 400, 150);
+                ctx.fillStyle = '#27ae60';
+                ctx.fillRect(0, 150, 400, 150);
+
+                // 谷仓
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(150, 100, 100, 80);
+                ctx.beginPath();
+                ctx.moveTo(140, 100);
+                ctx.lineTo(200, 50);
+                ctx.lineTo(260, 100);
+                ctx.closePath();
+                ctx.fill();
+
+                // 动物
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`farm_${i}`)) {
+                        drawEmojiAt(ctx, [40+i*70, 220], emoji, 1);
+                    }
+                });
+            },
+            // 厨房
+            kitchen: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#dfe6e9';
+                ctx.fillRect(0, 0, 400, 300);
+
+                // 柜子
+                ctx.fillStyle = '#b2bec3';
+                ctx.fillRect(50, 100, 300, 150);
+
+                // 炉灶
+                ctx.fillStyle = '#2d3436';
+                ctx.fillRect(150, 150, 100, 80);
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(175, 170, 15, 0, Math.PI*2);
+                ctx.arc(225, 170, 15, 0, Math.PI*2);
+                ctx.fill();
+
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`kt_${i}`)) {
+                        drawEmojiAt(ctx, [50+i*50, 50], emoji, 0.8);
+                    }
+                });
+            },
+            // 餐厅
+            restaurant: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#2d3436';
+                ctx.fillRect(0, 0, 400, 300);
+
+                // 桌子
+                ctx.fillStyle = '#636e72';
+                ctx.fillRect(100, 150, 200, 80);
+
+                // 食物
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`rest_${i}`)) {
+                        drawEmojiAt(ctx, [120+i*50, 130], emoji, 1);
+                    }
+                });
+            },
+            // 体育场
+            stadium: (ctx, emojis, diffIds, isRight) => {
+                // 草地
+                ctx.fillStyle = '#27ae60';
+                ctx.fillRect(0, 150, 400, 150);
+
+                // 跑道
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(0, 120, 400, 30);
+
+                // 看台
+                ctx.fillStyle = '#f39c12';
+                ctx.fillRect(0, 0, 400, 80);
+                for (let i = 0; i < 10; i++) {
+                    ctx.fillStyle = '#e67e22';
+                    ctx.fillRect(i*40, 10, 30, 50);
+                }
+
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`stad_${i}`)) {
+                        drawEmojiAt(ctx, [50+i*60, 180], emoji, 1);
+                    }
+                });
+            },
+            // 健身房
+            gym: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#636e72';
+                ctx.fillRect(0, 0, 400, 300);
+
+                // 器材
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(100, 100, 50, 150);
+                ctx.fillRect(250, 100, 50, 150);
+
+                // 垫子
+                ctx.fillStyle = '#3498db';
+                ctx.fillRect(150, 200, 100, 20);
+
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`gym_${i}`)) {
+                        drawEmojiAt(ctx, [40+i*50, 50], emoji, 0.8);
+                    }
+                });
+            },
+            // 泳池
+            pool: (ctx, emojis, diffIds, isRight) => {
+                // 背景
+                ctx.fillStyle = '#74b9ff';
+                ctx.fillRect(0, 0, 400, 200);
+
+                // 泳池
+                ctx.fillStyle = '#0984e3';
+                ctx.fillRect(50, 50, 300, 150);
+                ctx.fillStyle = '#74b9ff';
+                ctx.fillRect(60, 60, 280, 130);
+
+                // 边
+                ctx.fillStyle = '#ecf0f1';
+                ctx.fillRect(40, 45, 320, 15);
+                ctx.fillRect(40, 190, 320, 15);
+
+                // 装饰
+                emojis.forEach((emoji, i) => {
+                    if (!diffIds.includes(`pool_${i}`)) {
+                        drawEmojiAt(ctx, [50+i*60, 250], emoji, 0.9);
+                    }
+                });
+            }
+        };
+
+        // 辅助函数
+        function drawEmojiAt(ctx, pos, emoji, scale = 1) {
+            ctx.save();
+            ctx.font = `${30 * scale}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, pos[0], pos[1]);
+            ctx.restore();
+        }
+
+        // 主题关卡进度
+        let progress = JSON.parse(localStorage.getItem('finddiff_progress')) || {
+            film: { unlocked: 1, completed: [] },
+            fruit: { unlocked: 1, completed: [] },
+            nature: { unlocked: 1, completed: [] },
+            animal: { unlocked: 1, completed: [] },
+            food: { unlocked: 1, completed: [] },
+            sports: { unlocked: 1, completed: [] }
+        };
+
+        // 显示主题选择
+        function showThemeSelect() {
+            currentScreen = 'theme';
+            updateBackButton();
+            document.getElementById('themeSelectScreen').classList.remove('hidden');
+            document.getElementById('levelSelectScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+        }
+
+        // 选择主题
+        function selectTheme(theme) {
+            currentTheme = theme;
+            showLevelSelect();
+        }
+
+        // 显示关卡选择
+        function showLevelSelect() {
+            currentScreen = 'level';
+            updateBackButton();
+            document.getElementById('themeSelectScreen').classList.add('hidden');
+            document.getElementById('levelSelectScreen').classList.remove('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+
+            const theme = themes[currentTheme];
+            document.getElementById('levelThemeIcon').textContent = theme.icon;
+            document.getElementById('levelThemeName').textContent = theme.name;
+
+            const levelGrid = document.getElementById('levelGrid');
+            levelGrid.innerHTML = '';
+
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'level-btn';
+                btn.textContent = i;
+
+                const levelKey = `${currentBigLevel}-${i}`;
+                if (progress[currentTheme].completed.includes(levelKey)) {
+                    btn.classList.add('completed');
+                } else if (i === progress[currentTheme].unlocked) {
+                    btn.classList.add('current');
+                } else if (i > progress[currentTheme].unlocked) {
+                    btn.disabled = true;
+                }
+
+                btn.onclick = () => startLevel(i);
+                levelGrid.appendChild(btn);
             }
         }
 
-        // 绘制图片
-        function drawImages() {
+        // 开始关卡
+        function startLevel(smallLevel) {
+            currentSmallLevel = smallLevel;
+            currentScreen = 'game';
+            updateBackButton();
+
+            document.getElementById('levelSelectScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            // 计算差异数量
+            const diffCount = smallLevel <= 2 ? 3 : (smallLevel <= 4 ? 4 : 5);
+            timeLeft = 50 + smallLevel * 10;
+
+            document.getElementById('levelDisplay').textContent = `${currentBigLevel}-${smallLevel}`;
+            document.getElementById('found').textContent = `0/${diffCount}`;
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('score').textContent = score;
+
+            // 生成差异
+            differences = generateDifferences(diffCount);
+            foundDifferences = [];
+            gameOver = false;
+
+            // 绘制
+            drawGame();
+            startTimer();
+        }
+
+        // 生成差异
+        function generateDifferences(count) {
+            const emojis = themeEmojis[currentTheme];
+            const diffs = [];
+            const usedPositions = [];
+
+            // 场景索引
+            const theme = themes[currentTheme];
+            const sceneIndex = Math.floor(Math.random() * theme.scenes.length);
+            const sceneName = theme.scenes[sceneIndex];
+
+            for (let i = 0; i < count; i++) {
+                let x, y, key;
+                do {
+                    x = 50 + Math.random() * 300;
+                    y = 50 + Math.random() * 200;
+                    key = `${Math.floor(x/50)}-${Math.floor(y/50)}`;
+                } while (usedPositions.includes(key));
+                usedPositions.push(key);
+
+                const emoji = emojis[i % emojis.length];
+                const type = ['add', 'remove', 'change'][Math.floor(Math.random() * 3)];
+
+                diffs.push({
+                    id: `diff_${i}`,
+                    x: x,
+                    y: y,
+                    emoji: emoji,
+                    altEmoji: emojis[(i + 1) % emojis.length],
+                    type: type,
+                    scene: sceneName,
+                    radius: 30
+                });
+            }
+
+            return diffs;
+        }
+
+        // 绘制游戏
+        function drawGame() {
             const leftCanvas = document.getElementById('leftCanvas');
             const rightCanvas = document.getElementById('rightCanvas');
             const ctxLeft = leftCanvas.getContext('2d');
             const ctxRight = rightCanvas.getContext('2d');
 
-            leftCanvas.width = 350;
-            leftCanvas.height = 280;
-            rightCanvas.width = 350;
-            rightCanvas.height = 280;
+            const theme = themes[currentTheme];
+            const emojis = themeEmojis[currentTheme];
 
-            // 绘制左侧图片（完整版）
-            drawScene(ctxLeft, false);
+            // 使用第一个场景作为基础
+            const sceneName = differences.length > 0 ? differences[0].scene : theme.scenes[0];
+            const drawer = sceneDrawers[sceneName] || sceneDrawers.movie;
 
-            // 绘制右侧图片（有差异版）
-            drawScene(ctxRight, true);
-        }
+            // 绘制左图
+            const leftDiffIds = differences.map(d => d.id);
+            drawer(ctxLeft, emojis, leftDiffIds, false);
 
-        // 绘制场景
-        function drawScene(ctx, hasDifferences) {
-            const width = ctx.canvas.width;
-            const height = ctx.canvas.height;
+            // 绘制右图（带差异）
+            const rightDiffIds = differences.map(d => d.id);
+            drawer(ctxRight, emojis, rightDiffIds, true);
 
-            // 背景
-            const gradient = ctx.createLinearGradient(0, 0, width, height);
-            gradient.addColorStop(0, '#e8f4f8');
-            gradient.addColorStop(1, '#d4e9f7');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, width, height);
+            // 在差异位置绘制emoji
+            for (const diff of differences) {
+                // 左侧绘制
+                if (diff.type !== 'add') {
+                    ctxLeft.font = '30px Arial';
+                    ctxLeft.textAlign = 'center';
+                    ctxLeft.textBaseline = 'middle';
+                    ctxLeft.fillText(diff.emoji, diff.x, diff.y);
+                }
 
-            // 绘制背景装饰
-            for (let i = 0; i < 15; i++) {
-                const x = Math.random() * width;
-                const y = Math.random() * height;
-                const size = 10 + Math.random() * 20;
-                ctx.fillStyle = `rgba(102, 126, 234, ${0.1 + Math.random() * 0.1})`;
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // 绘制随机元素
-            const elementCount = 12;
-            const usedPositions = [];
-
-            for (let i = 0; i < elementCount; i++) {
-                let x, y, valid;
-                let attempts = 0;
-
-                do {
-                    x = 30 + Math.random() * (width - 60);
-                    y = 30 + Math.random() * (height - 60);
-                    valid = !usedPositions.some(p => Math.sqrt((p.x - x) ** 2 + (p.y - y) ** 2) < 40);
-                    attempts++;
-                } while (!valid && attempts < 50);
-
-                usedPositions.push({x, y});
-
-                // 检查这个位置是否有差异
-                const diff = differences.find(d => Math.sqrt((d.x - x) ** 2 + (d.y - y) ** 2) < d.size);
-
-                if (diff && hasDifferences) {
-                    // 绘制差异元素
-                    drawDifferenceElement(ctx, x, y, diff);
+                // 右侧绘制
+                if (diff.type === 'add') {
+                    ctxRight.font = '30px Arial';
+                    ctxRight.textAlign = 'center';
+                    ctxRight.textBaseline = 'middle';
+                    ctxRight.fillText(diff.emoji, diff.x, diff.y);
+                } else if (diff.type === 'change') {
+                    ctxRight.font = '30px Arial';
+                    ctxRight.textAlign = 'center';
+                    ctxRight.textBaseline = 'middle';
+                    ctxRight.fillText(diff.altEmoji, diff.x, diff.y);
                 } else {
-                    // 绘制普通元素
-                    const emoji = scenes[Math.floor(Math.random() * scenes.length)];
-                    const fontSize = 24 + Math.random() * 16;
-                    ctx.font = `${fontSize}px Arial`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(emoji, x, y);
+                    // remove - 右侧不画
+                }
+
+                // 已找到的显示标记
+                if (foundDifferences.includes(diff.id)) {
+                    drawFoundMarker(ctxLeft, diff.x, diff.y);
+                    drawFoundMarker(ctxRight, diff.x, diff.y);
                 }
             }
+
+            // 清除之前的标记
+            document.querySelectorAll('.marker, .hint-marker').forEach(el => el.remove());
         }
 
-        // 绘制差异元素
-        function drawDifferenceElement(ctx, x, y, diff) {
-            const type = diff.type;
-
-            if (type === 0) {
-                // 不同的emoji
-                const originalEmoji = scenes[diff.index];
-                const altEmojis = scenes.filter((_, i) => i !== diff.index);
-                const altEmoji = altEmojis[Math.floor(Math.random() * altEmojis.length)];
-                ctx.font = `${diff.size + 10}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(altEmoji, x, y);
-            } else if (type === 1) {
-                // 不同的形状
-                ctx.fillStyle = colors[diff.index % colors.length];
-                ctx.strokeStyle = colors[(diff.index + 1) % colors.length];
-                ctx.lineWidth = 2;
-
-                const shapeIndex = diff.index % shapes.length;
-                if (shapeIndex === 0) {
-                    ctx.beginPath();
-                    ctx.arc(x, y, diff.size / 2, 0, Math.PI * 2);
-                    ctx.fill();
-                } else if (shapeIndex === 1) {
-                    ctx.fillRect(x - diff.size / 2, y - diff.size / 2, diff.size, diff.size);
-                } else if (shapeIndex === 2) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, y - diff.size / 2);
-                    ctx.lineTo(x + diff.size / 2, y + diff.size / 2);
-                    ctx.lineTo(x - diff.size / 2, y + diff.size / 2);
-                    ctx.closePath();
-                    ctx.fill();
-                } else if (shapeIndex === 3) {
-                    drawStar(ctx, x, y, diff.size / 2);
-                    ctx.fill();
-                } else {
-                    drawHeart(ctx, x, y, diff.size);
-                    ctx.fill();
-                }
-            } else {
-                // 不同的颜色
-                ctx.fillStyle = colors[diff.index % colors.length];
-                ctx.font = `${diff.size + 10}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('⭐', x, y);
-            }
-        }
-
-        // 绘制星星
-        function drawStar(ctx, cx, cy, outerRadius) {
-            const innerRadius = outerRadius * 0.4;
-            const points = 5;
+        // 绘制找到的标记
+        function drawFoundMarker(ctx, x, y) {
+            ctx.save();
+            ctx.strokeStyle = '#2ecc71';
+            ctx.lineWidth = 4;
             ctx.beginPath();
-            for (let i = 0; i < points * 2; i++) {
-                const radius = i % 2 === 0 ? outerRadius : innerRadius;
-                const angle = (i * Math.PI) / points - Math.PI / 2;
-                const x = cx + Math.cos(angle) * radius;
-                const y = cy + Math.sin(angle) * radius;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.closePath();
-        }
+            ctx.arc(x, y, 25, 0, Math.PI * 2);
+            ctx.stroke();
 
-        // 绘制心形
-        function drawHeart(ctx, x, y, size) {
             ctx.beginPath();
-            const topCurveHeight = size * 0.3;
-            ctx.moveTo(x, y + size * 0.3);
-            ctx.bezierCurveTo(x, y, x - size * 0.5, y, x - size * 0.5, y + size * 0.3);
-            ctx.bezierCurveTo(x - size * 0.5, y + size * 0.6, x, y + size * 0.8, x, y + size);
-            ctx.bezierCurveTo(x, y + size * 0.8, x + size * 0.5, y + size * 0.6, x + size * 0.5, y + size * 0.3);
-            ctx.bezierCurveTo(x + size * 0.5, y, x, y, x, y + size * 0.3);
-            ctx.closePath();
+            ctx.moveTo(x - 10, y);
+            ctx.lineTo(x - 3, y + 8);
+            ctx.lineTo(x + 12, y - 8);
+            ctx.stroke();
+            ctx.restore();
         }
 
-        // 处理图片点击
-        function handleImageClick(e, side) {
-            if (gameOver || gameWon) return;
+        // 点击处理
+        function handleClick(e) {
+            if (gameOver) return;
 
-            const container = document.getElementById(side + 'Container');
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const canvas = e.target;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
 
-            // 检查是否点击到差异位置
-            const clickedDiff = differences.find((diff, index) => {
-                if (foundDifferences.includes(index)) return false;
+            let clickedDiff = null;
+            for (const diff of differences) {
+                if (foundDifferences.includes(diff.id)) continue;
+
                 const dist = Math.sqrt((diff.x - x) ** 2 + (diff.y - y) ** 2);
-                return dist < diff.size;
-            });
+                if (dist < diff.radius) {
+                    clickedDiff = diff;
+                    break;
+                }
+            }
 
             if (clickedDiff) {
-                const diffIndex = differences.indexOf(clickedDiff);
-                foundDifferences.push(diffIndex);
+                foundDifferences.push(clickedDiff.id);
+                addMarker(clickedDiff.x, clickedDiff.y);
 
-                // 添加标记
-                addMarker(clickedDiff.x, clickedDiff.y, diffIndex);
-
-                // 更新分数
-                const timeBonus = Math.floor(timeLeft / 10);
+                const timeBonus = Math.floor(timeLeft / 5);
                 score += 100 + timeBonus;
                 document.getElementById('score').textContent = score;
+                document.getElementById('found').textContent = `${foundDifferences.length}/${differences.length}`;
 
-                // 更新找到数量
-                const config = levelConfig[currentLevel];
-                document.getElementById('found').textContent = `${foundDifferences.length}/${config.differences}`;
-
-                // 检查是否获胜
-                if (foundDifferences.length === config.differences) {
-                    gameWon = true;
+                if (foundDifferences.length === differences.length) {
+                    gameOver = true;
                     clearInterval(timer);
-                    score += timeLeft * 10; // 时间奖励
+                    score += timeLeft * 10;
+
+                    const levelKey = `${currentBigLevel}-${currentSmallLevel}`;
+                    if (!progress[currentTheme].completed.includes(levelKey)) {
+                        progress[currentTheme].completed.push(levelKey);
+                        if (currentSmallLevel >= 5) {
+                            progress[currentTheme].unlocked = 1;
+                        } else {
+                            progress[currentTheme].unlocked = Math.max(
+                                progress[currentTheme].unlocked,
+                                currentSmallLevel + 1
+                            );
+                        }
+                        localStorage.setItem('finddiff_progress', JSON.stringify(progress));
+                    }
+
                     showWinMessage();
                 }
             } else {
-                // 点击错误，扣分
-                score = Math.max(0, score - 20);
+                score = Math.max(0, score - 30);
                 document.getElementById('score').textContent = score;
 
-                // 显示错误反馈
-                container.style.transform = 'translateX(5px)';
-                setTimeout(() => container.style.transform = 'translateX(-5px)', 50);
-                setTimeout(() => container.style.transform = '', 100);
+                canvas.style.transform = 'translateX(5px)';
+                setTimeout(() => canvas.style.transform = 'translateX(-5px)', 50);
+                setTimeout(() => canvas.style.transform = '', 100);
             }
         }
 
         // 添加标记
-        function addMarker(x, y, index) {
-            const leftContainer = document.getElementById('leftContainer');
-            const rightContainer = document.getElementById('rightContainer');
+        function addMarker(x, y) {
+            const leftWrapper = document.getElementById('leftWrapper');
+            const rightWrapper = document.getElementById('rightWrapper');
 
-            // 左侧标记
-            const leftMarker = document.createElement('div');
-            leftMarker.className = 'found-marker';
-            leftMarker.style.left = x + 'px';
-            leftMarker.style.top = y + 'px';
-            leftMarker.style.borderColor = ['#4caf50', '#ff9800', '#e91e63'][index % 3];
-            leftContainer.appendChild(leftMarker);
+            const leftCanvas = document.getElementById('leftCanvas');
+            const scaleX = leftCanvas.offsetWidth / leftCanvas.width;
+            const scaleY = leftCanvas.offsetHeight / leftCanvas.height;
 
-            // 右侧标记
-            const rightMarker = document.createElement('div');
-            rightMarker.className = 'found-marker';
-            rightMarker.style.left = x + 'px';
-            rightMarker.style.top = y + 'px';
-            rightMarker.style.borderColor = ['#4caf50', '#ff9800', '#e91e63'][index % 3];
-            rightContainer.appendChild(rightMarker);
+            [leftWrapper, rightWrapper].forEach(wrapper => {
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = (x * scaleX - 25) + 'px';
+                marker.style.top = (y * scaleY - 25) + 'px';
+                marker.style.width = '50px';
+                marker.style.height = '50px';
+                marker.style.border = '4px solid #2ecc71';
+                marker.style.borderRadius = '50%';
+                wrapper.appendChild(marker);
+            });
         }
 
-        // 更新计时器
-        function updateTimer() {
-            timeLeft--;
-            document.getElementById('timer').textContent = timeLeft;
+        // 计时器
+        function startTimer() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                const timerEl = document.getElementById('timer');
+                timerEl.textContent = timeLeft;
 
-            // 时间不足10秒时警告
-            if (timeLeft <= 10) {
-                document.getElementById('timer').classList.add('timer-warning');
-            }
+                if (timeLeft <= 10) {
+                    timerEl.classList.add('timer-warning');
+                } else {
+                    timerEl.classList.remove('timer-warning');
+                }
 
-            if (timeLeft <= 0) {
-                gameOver = true;
-                clearInterval(timer);
-                showLoseMessage();
-            }
+                if (timeLeft <= 0) {
+                    gameOver = true;
+                    clearInterval(timer);
+                    showLoseMessage();
+                }
+            }, 1000);
         }
 
-        // 显示获胜消息
+        // 显示胜利消息
         function showWinMessage() {
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('message').className = 'message show win';
             document.getElementById('overlay').classList.add('show');
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('loseMessage').style.display = 'none';
+            document.getElementById('finalScore').textContent = score;
         }
 
         // 显示失败消息
         function showLoseMessage() {
-            document.getElementById('message').className = 'message show lose';
-            document.getElementById('message').innerHTML = `
-                <h2>⏰ 时间到!</h2>
-                <p>你没有在规定时间内完成</p>
-                <p class="score">得分: <span id="finalScore">${score}</span></p>
-                <button class="btn btn-primary" onclick="startNewGame()">再试一次</button>
-            `;
             document.getElementById('overlay').classList.add('show');
+            document.getElementById('message').style.display = 'none';
+            document.getElementById('loseMessage').style.display = 'block';
         }
 
         // 隐藏消息
-        function hideMessage() {
+        function hideMessages() {
             document.getElementById('overlay').classList.remove('show');
-            document.getElementById('message').classList.remove('show');
-            document.getElementById('message').innerHTML = `
-                <h2>🎉 恭喜!</h2>
-                <p>你找到了所有不同之处！</p>
-                <p class="score">得分: <span id="finalScore">0</span></p>
-                <button class="btn btn-primary" onclick="startNewGame()">下一关</button>
-            `;
         }
 
-        // 启动
+        // 提示功能
+        function showHint() {
+            if (gameOver) return;
+
+            const unfoundDiffs = differences.filter(d => !foundDifferences.includes(d.id));
+            if (unfoundDiffs.length === 0) return;
+
+            const hintDiff = unfoundDiffs[Math.floor(Math.random() * unfoundDiffs.length)];
+            showHintMarker(hintDiff.x, hintDiff.y);
+
+            score = Math.max(0, score - 50);
+            document.getElementById('score').textContent = score;
+
+            const hintBtn = document.getElementById('hintBtn');
+            hintBtn.disabled = true;
+            setTimeout(() => {
+                hintBtn.disabled = false;
+            }, 5000);
+        }
+
+        // 显示提示标记
+        function showHintMarker(x, y) {
+            const leftWrapper = document.getElementById('leftWrapper');
+            const rightWrapper = document.getElementById('rightWrapper');
+
+            document.querySelectorAll('.hint-marker').forEach(el => el.remove());
+
+            const leftCanvas = document.getElementById('leftCanvas');
+            const scaleX = leftCanvas.offsetWidth / leftCanvas.width;
+            const scaleY = leftCanvas.offsetHeight / leftCanvas.height;
+
+            [leftWrapper, rightWrapper].forEach(wrapper => {
+                const hint = document.createElement('div');
+                hint.className = 'hint-marker';
+                hint.style.left = (x * scaleX - 30) + 'px';
+                hint.style.top = (y * scaleY - 30) + 'px';
+                wrapper.appendChild(hint);
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.hint-marker').forEach(el => el.remove());
+            }, 5000);
+        }
+
+        // 下一关
+        function nextLevel() {
+            hideMessages();
+            if (currentSmallLevel < 5) {
+                startLevel(currentSmallLevel + 1);
+            } else {
+                showLevelSelect();
+            }
+        }
+
+        // 重试
+        function retryLevel() {
+            hideMessages();
+            startLevel(currentSmallLevel);
+        }
+
+        // 初始化
+        function init() {
+            document.getElementById('leftCanvas').addEventListener('click', handleClick);
+            document.getElementById('rightCanvas').addEventListener('click', handleClick);
+            showThemeSelect();
+        }
+
+        // 更新返回按钮
+        function updateBackButton() {
+            const backLink = document.getElementById('backLink');
+            if (currentScreen === 'theme') {
+                backLink.onclick = function() { window.location.href = 'index.html'; };
+                backLink.textContent = '← 返回首页';
+            } else if (currentScreen === 'level') {
+                backLink.onclick = function() { showThemeSelect(); };
+                backLink.textContent = '← 返回主题';
+            } else if (currentScreen === 'game') {
+                backLink.onclick = function() { showLevelSelect(); };
+                backLink.textContent = '← 返回选关';
+            }
+        }
+
         init();
     </script>
 </body>
