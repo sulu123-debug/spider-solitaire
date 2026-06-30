@@ -1,0 +1,291 @@
+{
+  "timestamp": "2026-06-30T07:44:39.968Z",
+  "status": "NEEDS_REVIEW",
+  "summary": {
+    "total": 41,
+    "passed": 39,
+    "failed": 2,
+    "passRate": "95.1%"
+  },
+  "details": {
+    "directoryStructure": {
+      "verified": true,
+      "details": [
+        {
+          "path": "index.html",
+          "desc": "游戏首页",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "spider_solitaire/index.html",
+          "desc": "蜘蛛纸牌",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "sudoku/index.html",
+          "desc": "数独",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "minesweeper/index.html",
+          "desc": "扫雷",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "finddiff/index.html",
+          "desc": "找不同(原版)",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "finddiff/v2.html",
+          "desc": "找不同(V2)",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "loop_engineering/index.js",
+          "desc": "测试框架入口",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "loop_engineering/tests",
+          "desc": "测试脚本目录",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "loop_engineering/reports",
+          "desc": "测试报告目录",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "shared/css",
+          "desc": "共享CSS",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "shared/js",
+          "desc": "共享JS",
+          "exists": true,
+          "valid": true
+        }
+      ],
+      "summary": {
+        "passed": 11,
+        "total": 11
+      }
+    },
+    "links": {
+      "verified": true,
+      "details": [
+        {
+          "link": "spider_solitaire/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/spider_solitaire/index.html",
+          "exists": true
+        },
+        {
+          "link": "sudoku/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/sudoku/index.html",
+          "exists": true
+        },
+        {
+          "link": "minesweeper/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/minesweeper/index.html",
+          "exists": true
+        },
+        {
+          "link": "finddiff/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/finddiff/index.html",
+          "exists": true
+        }
+      ],
+      "summary": {
+        "passed": 4,
+        "total": 4
+      }
+    },
+    "games": {
+      "spider_solitaire": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "sudoku": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "minesweeper": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "finddiff": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "生成函数",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "关卡1-3 (3处)",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "关卡4-6 (4处)",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "关卡7+ (5处)",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "差异点数组",
+            "test": true
+          },
+          {
+            "category": "图片生成",
+            "name": "Picsum API",
+            "test": true
+          },
+          {
+            "category": "图片生成",
+            "name": "加载事件",
+            "test": true
+          },
+          {
+            "category": "图片生成",
+            "name": "左右区分",
+            "test": true
+          },
+          {
+            "category": "功能按钮",
+            "name": "💡 提示",
+            "test": true
+          },
+          {
+            "category": "功能按钮",
+            "name": "⏱️ 加时",
+            "test": true
+          },
+          {
+            "category": "功能按钮",
+            "name": "🔍 放大",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 14,
+          "total": 14
+        }
+      }
+    },
+    "subTests": {
+      "verified": false,
+      "details": [
+        {
+          "file": "test_browser_simulation.js",
+          "passed": false,
+          "error": "Command failed: node \"/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/loop_engineering/tests/test_browser_simulation.js\"\nnode:internal/modules/cjs/loader:1520\n  throw err;\n  ^\n\nError: Cannot find module 'jsdom'\nRequire stack:\n- /Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/loop_engineering/tests/test_browser_simulation.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)\n    at Module._load (node:internal/modules/cjs/loader:1294:5)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1617:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/loop_engineering/tests/test_browser_simulation.js:8:19)\n    at Module._compile (node:internal/modules/cjs/loader:1871:14) {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: [\n    '/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/loop_engineering/tests/test_browser_simulation.js'\n  ]\n}\n\nNode.js v24.18.0\n"
+        },
+        {
+          "file": "test_finddiff.js",
+          "passed": false
+        },
+        {
+          "file": "test_static_analysis.js",
+          "passed": true
+        }
+      ],
+      "summary": {
+        "passed": 1,
+        "total": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "iteration": 1,
+  "passed": true,
+  "tests": [
+    {
+      "name": "基础结构",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "功能按钮",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "差异点生成",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "图片生成",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "点击检测",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "状态管理",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "UI反馈",
+      "status": "PASS",
+      "error": null
+    }
+  ],
+  "errors": []
+}

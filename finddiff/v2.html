@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>找不同 - 精美版</title>
+    <!-- Vant CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@4/lib/index.css" />
+    <!-- Confetti for celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 顶部导航栏 */
+        .nav-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-back {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .stat-icon {
+            font-size: 16px;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            padding: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 主题选择卡片 */
+        .theme-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .theme-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 2px solid transparent;
+        }
+
+        .theme-card:active {
+            transform: scale(0.96);
+        }
+
+        .theme-card.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8f6ff 100%);
+        }
+
+        .theme-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .theme-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .theme-desc {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 关卡选择 */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .level-item {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            border: 2px solid transparent;
+        }
+
+        .level-item:active {
+            transform: scale(0.95);
+        }
+
+        .level-item.locked {
+            background: #f0f0f0;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .level-item.current {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .level-item.completed {
+            background: #07c160;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
+        }
+
+        /* 游戏区域 */
+        .game-area {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .info-value.warning {
+            color: #ff4d4f;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 图片对比区域 */
+        .image-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .image-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #f5f5f5;
+        }
+
+        .image-wrapper img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 360px;
+        }
+
+        .image-label {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 差异标记 */
+        .diff-marker {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 3px solid #07c160;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: markerAppear 0.4s ease-out;
+            box-shadow: 0 0 10px rgba(7, 193, 96, 0.5);
+        }
+
+        @keyframes markerAppear {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .diff-marker::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #07c160;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 底部工具栏 */
+        .toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .tool-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 12px;
+        }
+
+        .tool-btn:active {
+            background: #f5f5f5;
+        }
+
+        .tool-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .tool-icon {
+            font-size: 24px;
+        }
+
+        .tool-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .tool-btn.primary .tool-icon {
+            color: #667eea;
+        }
+
+        .tool-btn.success .tool-icon {
+            color: #07c160;
+        }
+
+        .tool-btn.warning .tool-icon {
+            color: #ff9800;
+        }
+
+        /* 提示动画 */
+        .hint-ring {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px dashed #ff9800;
+            border-radius: 50%;
+            animation: hintPulse 1s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* 弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            max-width: 320px;
+            width: 100%;
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 24px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        .btn-default {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        /* 加载状态 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .loading.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #f0f0f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 隐藏 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* 页面容器 */
+        .page {
+            min-height: calc(100vh - 60px);
+            padding-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="nav-bar">
+        <div class="nav-left">
+            <span class="nav-back" onclick="goBack()">←</span>
+            <span class="nav-title" id="navTitle">找不同</span>
+        </div>
+        <div class="nav-right" id="navStats">
+            <div class="stat-item">
+                <span class="stat-icon">⏱️</span>
+                <span id="timerDisplay">60</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">❤️</span>
+                <span id="livesDisplay">3</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载中 -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 主题选择页 -->
+    <div class="page" id="themePage">
+        <div class="main-content">
+            <div class="theme-section">
+                <div class="section-title">选择主题</div>
+                <div class="theme-grid">
+                    <div class="theme-card" onclick="selectTheme('daily')">
+                        <span class="theme-icon">🏠</span>
+                        <div class="theme-name">日常生活</div>
+                        <div class="theme-desc">温馨家庭场景</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme('nature')">
+                        <span class="theme-icon">🌲</span>
+                        <div class="theme-name">自然风光</div>
+                        <div class="theme-desc">山水花草树木</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme('animal')">
+                        <span class="theme-icon">🐱</span>
+                        <div class="theme-name">可爱动物</div>
+                        <div class="theme-desc">萌宠动物世界</div>
+                    </div>
+                    <div class="theme-card" onclick="selectTheme('food')">
+                        <span class="theme-icon">🍰</span>
+                        <div class="theme-name">美食料理</div>
+                        <div class="theme-desc">美味食物图片</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡选择页 -->
+    <div class="page hidden" id="levelPage">
+        <div class="main-content">
+            <div class="theme-section">
+                <div class="section-title" id="levelTitle">选择关卡</div>
+                <div class="level-grid" id="levelGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏页 -->
+    <div class="page hidden" id="gamePage">
+        <div class="main-content">
+            <div class="game-area">
+                <div class="game-header">
+                    <div class="game-info">
+                        <div class="info-item">
+                            <div class="info-label">关卡</div>
+                            <div class="info-value" id="levelNum">1</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">找到</div>
+                            <div class="info-value" id="foundCount">0/3</div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <div class="info-item">
+                            <div class="info-label">分数</div>
+                            <div class="info-value" id="scoreDisplay">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container" id="imageContainer">
+                    <!-- 图片将通过JS动态加载 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部工具栏 -->
+    <div class="toolbar" id="toolbar">
+        <button class="tool-btn primary" onclick="useHint()">
+            <span class="tool-icon">💡</span>
+            <span class="tool-text">提示</span>
+        </button>
+        <button class="tool-btn warning" onclick="addTime()">
+            <span class="tool-icon">⏱️</span>
+            <span class="tool-text">+30秒</span>
+        </button>
+        <button class="tool-btn success" onclick="zoomImage()">
+            <span class="tool-icon">🔍</span>
+            <span class="tool-text">放大</span>
+        </button>
+    </div>
+
+    <!-- 游戏结果弹窗 -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="resultIcon">🎉</div>
+            <div class="modal-title" id="resultTitle">恭喜过关!</div>
+            <div class="modal-text" id="resultText">你找到了所有不同之处</div>
+            <div class="modal-score" id="resultScore">0</div>
+            <div class="modal-buttons">
+                <button class="btn btn-default" onclick="backToLevels()">返回选关</button>
+                <button class="btn btn-primary" onclick="nextLevel()">下一关</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vant JS -->
+    <script src="https://cdn.jsdelivr.net/npm/vant@4/lib/vant.min.js"></script>
+    
+    <script>
+        // 游戏状态
+        let currentTheme = '';
+        let currentLevel = 1;
+        let score = 0;
+        let timeLeft = 60;
+        let lives = 3;
+        let timer = null;
+        let gameOver = false;
+        let differences = [];
+        let foundDifferences = [];
+        let currentPage = 'theme';
+
+        // 主题配置
+        const themes = {
+            daily: { name: '日常生活', keyword: 'home interior room' },
+            nature: { name: '自然风光', keyword: 'nature landscape forest' },
+            animal: { name: '可爱动物', keyword: 'cute animals pet' },
+            food: { name: '美食料理', keyword: 'food delicious meal' }
+        };
+
+        // 关卡进度
+        let progress = JSON.parse(localStorage.getItem('finddiff_v2_progress')) || {
+            unlocked: 1,
+            completed: []
+        };
+
+        // 返回上一页
+        function goBack() {
+            if (currentPage === 'game') {
+                showLevelPage();
+            } else if (currentPage === 'level') {
+                showThemePage();
+            } else {
+                window.location.href = '/spider-solitaire/';
+            }
+        }
+
+        // 显示主题页
+        function showThemePage() {
+            currentPage = 'theme';
+            document.getElementById('themePage').classList.remove('hidden');
+            document.getElementById('levelPage').classList.add('hidden');
+            document.getElementById('gamePage').classList.add('hidden');
+            document.getElementById('navTitle').textContent = '找不同';
+            document.getElementById('navStats').classList.add('hidden');
+            document.getElementById('toolbar').classList.add('hidden');
+        }
+
+        // 显示关卡页
+        function showLevelPage() {
+            currentPage = 'level';
+            document.getElementById('themePage').classList.add('hidden');
+            document.getElementById('levelPage').classList.remove('hidden');
+            document.getElementById('gamePage').classList.add('hidden');
+            document.getElementById('navTitle').textContent = themes[currentTheme].name;
+            document.getElementById('navStats').classList.add('hidden');
+            document.getElementById('toolbar').classList.add('hidden');
+            renderLevels();
+        }
+
+        // 显示游戏页
+        function showGamePage() {
+            currentPage = 'game';
+            document.getElementById('themePage').classList.add('hidden');
+            document.getElementById('levelPage').classList.add('hidden');
+            document.getElementById('gamePage').classList.remove('hidden');
+            document.getElementById('navTitle').textContent = `第${currentLevel}关`;
+            document.getElementById('navStats').classList.remove('hidden');
+            document.getElementById('toolbar').classList.remove('hidden');
+        }
+
+        // 选择主题
+        function selectTheme(theme) {
+            currentTheme = theme;
+            showLevelPage();
+        }
+
+        // 渲染关卡
+        function renderLevels() {
+            const grid = document.getElementById('levelGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 10; i++) {
+                const item = document.createElement('div');
+                item.className = 'level-item';
+                item.textContent = i;
+                
+                if (progress.completed.includes(i)) {
+                    item.classList.add('completed');
+                } else if (i === progress.unlocked) {
+                    item.classList.add('current');
+                } else if (i > progress.unlocked) {
+                    item.classList.add('locked');
+                }
+                
+                item.onclick = () => {
+                    if (i <= progress.unlocked) {
+                        startGame(i);
+                    }
+                };
+                
+                grid.appendChild(item);
+            }
+        }
+
+        // 开始游戏
+        async function startGame(level) {
+            currentLevel = level;
+            showGamePage();
+            
+            // 重置游戏状态
+            score = 0;
+            lives = 3;
+            timeLeft = 60 + (level - 1) * 10;
+            gameOver = false;
+            foundDifferences = [];
+            
+            updateUI();
+            
+            // 加载图片
+            showLoading(true);
+            await loadGameImages();
+            showLoading(false);
+            
+            // 开始计时
+            startTimer();
+        }
+
+        // 加载游戏图片
+        async function loadGameImages() {
+            const container = document.getElementById('imageContainer');
+            container.innerHTML = '';
+            
+            // 使用随机种子获取两张相似的图片
+            const seed = Math.floor(Math.random() * 1000);
+            const keyword = themes[currentTheme].keyword;
+            
+            // 创建左右图片容器
+            const leftWrapper = createImageWrapper('左图', 'left');
+            const rightWrapper = createImageWrapper('右图', 'right');
+            
+            // 加载图片（使用相同的seed确保是同一图片）
+            const imgUrl = `https://picsum.photos/seed/${keyword}${seed}/400/300`;
+            
+            leftWrapper.querySelector('img').src = imgUrl;
+            rightWrapper.querySelector('img').src = imgUrl;
+            
+            container.appendChild(leftWrapper);
+            container.appendChild(rightWrapper);
+            
+            // 生成差异点
+            generateDifferences();
+        }
+
+        // 创建图片容器
+        function createImageWrapper(label, side) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-wrapper';
+            wrapper.dataset.side = side;
+            
+            const labelEl = document.createElement('div');
+            labelEl.className = 'image-label';
+            labelEl.textContent = label;
+            
+            const img = document.createElement('img');
+            img.onload = () => {
+                // 图片加载完成后添加点击事件
+                wrapper.onclick = (e) => handleImageClick(e, side);
+            };
+            
+            wrapper.appendChild(labelEl);
+            wrapper.appendChild(img);
+            
+            return wrapper;
+        }
+
+        // 生成差异点
+        function generateDifferences() {
+            const count = currentLevel <= 3 ? 3 : (currentLevel <= 6 ? 4 : 5);
+            differences = [];
+            
+            for (let i = 0; i < count; i++) {
+                differences.push({
+                    id: i,
+                    x: 50 + Math.random() * 300,
+                    y: 50 + Math.random() * 200,
+                    found: false
+                });
+            }
+        }
+
+        // 处理图片点击
+        function handleImageClick(e, side) {
+            if (gameOver) return;
+            
+            const rect = e.currentTarget.getBoundingClientRect();
+            const scaleX = 400 / rect.width;
+            const scaleY = 300 / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            
+            // 检查是否点击到差异点
+            let found = false;
+            for (const diff of differences) {
+                if (diff.found) continue;
+                
+                const dist = Math.sqrt((diff.x - x) ** 2 + (diff.y - y) ** 2);
+                if (dist < 40) {
+                    found = true;
+                    diff.found = true;
+                    foundDifferences.push(diff.id);
+                    
+                    // 添加标记
+                    addMarker(diff.x, diff.y);
+                    
+                    // 更新分数
+                    score += 100 + Math.floor(timeLeft / 2);
+                    
+                    // 庆祝效果
+                    confetti({
+                        particleCount: 30,
+                        spread: 50,
+                        origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
+                    });
+                    
+                    break;
+                }
+            }
+            
+            if (!found) {
+                // 错误点击
+                lives--;
+                vant.Toast.fail('没找到，再试试！');
+                
+                // 震动效果
+                const wrapper = e.currentTarget;
+                wrapper.style.animation = 'shake 0.3s';
+                setTimeout(() => wrapper.style.animation = '', 300);
+                
+                if (lives <= 0) {
+                    endGame(false);
+                }
+            }
+            
+            updateUI();
+            
+            // 检查是否全部找到
+            if (foundDifferences.length === differences.length) {
+                endGame(true);
+            }
+        }
+
+        // 添加标记
+        function addMarker(x, y) {
+            const wrappers = document.querySelectorAll('.image-wrapper');
+            wrappers.forEach(wrapper => {
+                const marker = document.createElement('div');
+                marker.className = 'diff-marker';
+                
+                const img = wrapper.querySelector('img');
+                const scaleX = img.offsetWidth / 400;
+                const scaleY = img.offsetHeight / 300;
+                
+                marker.style.left = (x * scaleX - 25) + 'px';
+                marker.style.top = (y * scaleY - 25) + 'px';
+                
+                wrapper.appendChild(marker);
+            });
+        }
+
+        // 更新UI
+        function updateUI() {
+            document.getElementById('levelNum').textContent = currentLevel;
+            document.getElementById('foundCount').textContent = `${foundDifferences.length}/${differences.length}`;
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('timerDisplay').textContent = timeLeft;
+            document.getElementById('livesDisplay').textContent = lives;
+            
+            // 时间警告
+            const timerEl = document.getElementById('timerDisplay');
+            if (timeLeft <= 10) {
+                timerEl.parentElement.classList.add('warning');
+            } else {
+                timerEl.parentElement.classList.remove('warning');
+            }
+        }
+
+        // 计时器
+        function startTimer() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                updateUI();
+                
+                if (timeLeft <= 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        // 结束游戏
+        function endGame(win) {
+            gameOver = true;
+            clearInterval(timer);
+            
+            const modal = document.getElementById('resultModal');
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+            const text = document.getElementById('resultText');
+            const scoreEl = document.getElementById('resultScore');
+            
+            if (win) {
+                icon.textContent = '🎉';
+                title.textContent = '恭喜过关!';
+                text.textContent = `用时${60 + (currentLevel - 1) * 10 - timeLeft}秒，剩余${lives}条生命`;
+                scoreEl.textContent = score;
+                
+                // 保存进度
+                if (!progress.completed.includes(currentLevel)) {
+                    progress.completed.push(currentLevel);
+                    progress.unlocked = Math.max(progress.unlocked, currentLevel + 1);
+                    localStorage.setItem('finddiff_v2_progress', JSON.stringify(progress));
+                }
+                
+                // 大庆祝
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } else {
+                icon.textContent = '😢';
+                title.textContent = '游戏结束';
+                text.textContent = lives <= 0 ? '生命值耗尽' : '时间到了';
+                scoreEl.textContent = score;
+            }
+            
+            modal.classList.add('show');
+        }
+
+        // 使用提示
+        function useHint() {
+            if (gameOver) return;
+            
+            const unfound = differences.filter(d => !d.found);
+            if (unfound.length === 0) return;
+            
+            const hint = unfound[Math.floor(Math.random() * unfound.length)];
+            
+            // 添加提示圈
+            const wrappers = document.querySelectorAll('.image-wrapper');
+            wrappers.forEach(wrapper => {
+                const ring = document.createElement('div');
+                ring.className = 'hint-ring';
+                
+                const img = wrapper.querySelector('img');
+                const scaleX = img.offsetWidth / 400;
+                const scaleY = img.offsetHeight / 300;
+                
+                ring.style.left = (hint.x * scaleX - 30) + 'px';
+                ring.style.top = (hint.y * scaleY - 30) + 'px';
+                
+                wrapper.appendChild(ring);
+                
+                setTimeout(() => ring.remove(), 3000);
+            });
+            
+            score = Math.max(0, score - 50);
+            updateUI();
+            
+            vant.Toast('提示：注意看橙色圆圈位置');
+        }
+
+        // 加时
+        function addTime() {
+            if (gameOver) return;
+            timeLeft += 30;
+            updateUI();
+            vant.Toast.success('增加30秒！');
+        }
+
+        // 放大
+        function zoomImage() {
+            vant.Toast('双指缩放可查看细节');
+        }
+
+        // 返回选关
+        function backToLevels() {
+            document.getElementById('resultModal').classList.remove('show');
+            showLevelPage();
+        }
+
+        // 下一关
+        function nextLevel() {
+            document.getElementById('resultModal').classList.remove('show');
+            if (currentLevel < 10) {
+                startGame(currentLevel + 1);
+            } else {
+                showLevelPage();
+            }
+        }
+
+        // 显示/隐藏加载
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('show', show);
+        }
+
+        // 初始化
+        showThemePage();
+    </script>
+</body>
+</html>

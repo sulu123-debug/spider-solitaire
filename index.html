@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小游戏合集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .game-icon {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+        }
+
+        .spider-solitaire .game-icon {
+            background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+        }
+
+        .spider-solitaire .game-icon::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🕷️%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .sudoku .game-icon {
+            background: linear-gradient(135deg, #e65100 0%, #f57c00 100%);
+        }
+
+        .sudoku .game-icon::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔢%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .minesweeper .game-icon {
+            background: linear-gradient(135deg, #37474f 0%, #546e7a 100%);
+        }
+
+        .minesweeper .game-icon::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚩%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .finddiff .game-icon {
+            background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
+        }
+
+        .finddiff .game-icon::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔍%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .coming-soon .game-icon {
+            background: linear-gradient(135deg, #424242 0%, #616161 100%);
+        }
+
+        .coming-soon .game-icon::before {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎮%3C/text%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .game-info {
+            padding: 25px;
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .game-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .game-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .tag.difficulty-easy {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .tag.difficulty-medium {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .tag.difficulty-hard {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .play-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .game-card:hover .play-button {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: white;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 小游戏合集</h1>
+            <p>经典纸牌与益智游戏，随时随地畅玩</p>
+        </div>
+
+        <div class="games-grid">
+            <!-- 蜘蛛纸牌 -->
+            <a href="spider_solitaire/" class="game-card spider-solitaire">
+                <div class="game-icon">
+                    🕷️
+                </div>
+                <div class="game-info">
+                    <h2 class="game-title">蜘蛛纸牌</h2>
+                    <p class="game-description">
+                        经典 Windows 纸牌游戏。将相同花色的牌按顺序排列，从 K 到 A，完成所有牌组即可获胜。支持1/2/4花色难度选择。
+                    </p>
+                    <div class="game-tags">
+                        <span class="tag">纸牌</span>
+                        <span class="tag">经典</span>
+                        <span class="tag difficulty-easy">简单</span>
+                        <span class="tag difficulty-hard">困难</span>
+                    </div>
+                    <div class="play-button">开始游戏 →</div>
+                </div>
+            </a>
+
+            <!-- 数独 -->
+            <a href="sudoku/" class="game-card sudoku">
+                <div class="game-icon">
+                    🔢
+                </div>
+                <div class="game-info">
+                    <h2 class="game-title">数独挑战</h2>
+                    <p class="game-description">
+                        经典数字益智游戏。在9x9网格中填入1-9数字，使每行、每列、每个3x3区块都不重复。从简单到专家，挑战你的逻辑思维！
+                    </p>
+                    <div class="game-tags">
+                        <span class="tag">益智</span>
+                        <span class="tag">数字</span>
+                        <span class="tag difficulty-easy">简单</span>
+                        <span class="tag difficulty-medium">中等</span>
+                        <span class="tag difficulty-hard">困难</span>
+                    </div>
+                    <div class="play-button">开始游戏 →</div>
+                </div>
+            </a>
+
+            <!-- 扫雷 -->
+            <a href="minesweeper/" class="game-card minesweeper">
+                <div class="game-icon">
+                    🚩
+                </div>
+                <div class="game-info">
+                    <h2 class="game-title">扫雷挑战</h2>
+                    <p class="game-description">
+                        经典 Windows 扫雷游戏。左键揭开格子，右键插旗标记地雷。找出所有安全格子即可获胜。三个难度级别等你挑战！
+                    </p>
+                    <div class="game-tags">
+                        <span class="tag">经典</span>
+                        <span class="tag">益智</span>
+                        <span class="tag difficulty-easy">简单</span>
+                        <span class="tag difficulty-medium">中等</span>
+                        <span class="tag difficulty-hard">困难</span>
+                    </div>
+                    <div class="play-button">开始游戏 →</div>
+                </div>
+            </a>
+
+            <!-- 找不同 -->
+            <a href="finddiff/" class="game-card finddiff">
+                <div class="game-icon">
+                    🔍
+                </div>
+                <div class="game-info">
+                    <h2 class="game-title">找不同</h2>
+                    <p class="game-description">
+                        找出两张图片中的不同之处！玩法：点击左右两张图片中不一样的地方。难度越高，不同之处越多，限定时间越短！
+                    </p>
+                    <div class="game-tags">
+                        <span class="tag">观察</span>
+                        <span class="tag">益智</span>
+                        <span class="tag difficulty-easy">简单</span>
+                        <span class="tag difficulty-medium">中等</span>
+                        <span class="tag difficulty-hard">困难</span>
+                    </div>
+                    <div class="play-button">开始游戏 →</div>
+                </div>
+            </a>
+
+            <!-- 敬请期待 -->
+            <div class="game-card coming-soon">
+                <div class="game-icon">
+                    🎮
+                </div>
+                <div class="game-info">
+                    <h2 class="game-title">更多游戏</h2>
+                    <p class="game-description">
+                        更多精彩游戏正在开发中，敬请期待！如果你有想玩的游戏，欢迎提出建议。
+                    </p>
+                    <div class="game-tags">
+                        <span class="tag">即将上线</span>
+                    </div>
+                    <div class="play-button" style="background: #999;">敬请期待</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>使用键盘、鼠标或触屏即可游玩 | 自动保存进度</p>
+        </div>
+    </div>
+</body>
+</html>
