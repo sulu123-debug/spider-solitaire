@@ -1,0 +1,269 @@
+{
+  "timestamp": "2026-06-30T07:47:47.202Z",
+  "status": "PASSED",
+  "summary": {
+    "total": 38,
+    "passed": 38,
+    "failed": 0,
+    "passRate": "100.0%"
+  },
+  "details": {
+    "directoryStructure": {
+      "verified": true,
+      "details": [
+        {
+          "path": "index.html",
+          "desc": "游戏首页",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "spider_solitaire/index.html",
+          "desc": "蜘蛛纸牌",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "sudoku/index.html",
+          "desc": "数独",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "minesweeper/index.html",
+          "desc": "扫雷",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "finddiff/index.html",
+          "desc": "找不同(原版)",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "finddiff/v2.html",
+          "desc": "找不同(V2)",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "loop_engineering/index.js",
+          "desc": "测试框架入口",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "loop_engineering/tests",
+          "desc": "测试脚本目录",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "loop_engineering/reports",
+          "desc": "测试报告目录",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "shared/css",
+          "desc": "共享CSS",
+          "exists": true,
+          "valid": true
+        },
+        {
+          "path": "shared/js",
+          "desc": "共享JS",
+          "exists": true,
+          "valid": true
+        }
+      ],
+      "summary": {
+        "passed": 11,
+        "total": 11
+      }
+    },
+    "links": {
+      "verified": true,
+      "details": [
+        {
+          "link": "spider_solitaire/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/spider_solitaire/index.html",
+          "exists": true
+        },
+        {
+          "link": "sudoku/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/sudoku/index.html",
+          "exists": true
+        },
+        {
+          "link": "minesweeper/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/minesweeper/index.html",
+          "exists": true
+        },
+        {
+          "link": "finddiff/",
+          "path": "/Users/sudaheng/skills/tfin-comp-opti-project/spider_solitaire/finddiff/index.html",
+          "exists": true
+        }
+      ],
+      "summary": {
+        "passed": 4,
+        "total": 4
+      }
+    },
+    "games": {
+      "spider_solitaire": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "sudoku": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "minesweeper": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 3,
+          "total": 3
+        }
+      },
+      "finddiff": {
+        "verified": true,
+        "details": [
+          {
+            "category": "基础结构",
+            "name": "HTML结构",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "标题标签",
+            "test": true
+          },
+          {
+            "category": "基础结构",
+            "name": "返回首页链接",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "生成函数",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "关卡1-3 (3处)",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "关卡4-6 (4处)",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "关卡7+ (5处)",
+            "test": true
+          },
+          {
+            "category": "差异点逻辑",
+            "name": "差异点数组",
+            "test": true
+          },
+          {
+            "category": "图片生成",
+            "name": "Picsum API",
+            "test": true
+          },
+          {
+            "category": "图片生成",
+            "name": "加载事件",
+            "test": true
+          },
+          {
+            "category": "图片生成",
+            "name": "左右区分",
+            "test": true
+          },
+          {
+            "category": "功能按钮",
+            "name": "💡 提示",
+            "test": true
+          },
+          {
+            "category": "功能按钮",
+            "name": "⏱️ 加时",
+            "test": true
+          },
+          {
+            "category": "功能按钮",
+            "name": "🔍 放大",
+            "test": true
+          }
+        ],
+        "summary": {
+          "passed": 14,
+          "total": 14
+        }
+      }
+    }
+  }
+}
